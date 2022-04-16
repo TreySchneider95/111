@@ -10,5 +10,5 @@ def index():
         "last_name":"Schneider",
         "hobby":"Coding"
     }
-    return json.dumps(me)
+    return me
 
