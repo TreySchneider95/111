@@ -21,8 +21,8 @@ def insert(user_dict):
     )
     statement = """
         INSERT INTO user (
-            first_name
-            last_name
+            first_name,
+            last_name,
             hobbies
         ) VALUES (?,?,?)
     """
@@ -33,15 +33,13 @@ def insert(user_dict):
 
 def scan():
     cursor = get_db()
-    cursor.execute('SELECT * FROM user WHERE active=1')
-    results = cursor.fetchall()
+    results = cursor.execute('SELECT * FROM user WHERE active=1').fetchall()
     cursor.close()
     return output_formatter(results)
 
-def selct_by_id(pk):
+def select_by_id(pk):
     cursor = get_db()
-    cursor.execute(f'SELECT * FROM user WHERE id={pk}')
-    results = cursor.fetchall()
+    results = cursor.execute('SELECT * FROM user WHERE id=?', (pk,)).fetchall()
     cursor.close()
     return output_formatter(results)
 
@@ -54,13 +52,20 @@ def update(pk, user_data):
     )
     statement = """
         UPDATE user
-        SET first_name=?
-            last_name=?
+        SET first_name=?,
+            last_name=?,
             hobbies=?
         WHERE id=?
     """
     cursor = get_db()
     cursor.execute(statement, value_tuple)
+    cursor.commit()
+    cursor.close()
+
+
+def deactivate(pk):
+    cursor = get_db()
+    cursor.execute("DELETE from user WHERE id=?", (pk,))
     cursor.commit()
     cursor.close()
 
