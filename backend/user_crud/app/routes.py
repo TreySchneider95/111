@@ -1,7 +1,7 @@
 
 from flask import Flask, request, render_template, redirect
 from datetime import datetime
-from app.database import user, vehicle
+from app.database import user, vehicle, report
 
 app = Flask(__name__)
 VERSION = "1.0.0"
@@ -92,7 +92,15 @@ def vehicle_func(pk):
     else:
         return "vehicle not found", 404
 
-@app.route('/', methods = ['GET', 'POST'])
-def home():
+
     return render_template('index.html')
 
+@app.route('/report', methods = ['GET'])
+def get_all_vehicles_and_owners():
+    vehicle_list = report.get_all_users_and_vehicles()
+    resp = {
+        "status": "ok",
+        "message": "success",
+        "vehicles": vehicle_list
+    }
+    return resp
