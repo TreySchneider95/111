@@ -1,4 +1,5 @@
 from app.database import get_db
+import sqlite3
 
 def output_formatter(results):
     out = []
@@ -57,15 +58,22 @@ def update(pk, user_data):
             hobbies=?
         WHERE id=?
     """
-    cursor = get_db()
-    cursor.execute(statement, value_tuple)
-    cursor.commit()
-    cursor.close()
+    conn = sqlite3.connect("user.db")
+    c = conn.cursor()
+    c.execute(statement, value_tuple)
+    conn.commit()
+    c.close()
 
 
 def deactivate(pk):
     cursor = get_db()
-    cursor.execute("DELETE from user WHERE id=?", (pk,))
+    statement = """
+        UPDATE user
+        SET active=0
+        WHERE id=?
+    """
+    cursor.execute(statement, (pk,))
     cursor.commit()
     cursor.close()
+    
 
