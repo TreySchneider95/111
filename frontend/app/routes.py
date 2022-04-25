@@ -21,7 +21,6 @@ def report_page():
     response = requests.get(url)
     if response.status_code == 200:
         user_data = response.json().get("vehicles")
-        print(user_data)
         return render_template("report.html", info = user_data)
     else:
         return render_template("no_info_error.html")
